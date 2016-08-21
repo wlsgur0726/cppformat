@@ -29,7 +29,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "posix-mock.h"
-#include "cppformat/posix.cc"
+#include "fmt/posix.cc"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -277,8 +277,7 @@ TEST(FileTest, Size) {
   write_file("test", content);
   File f("test", File::RDONLY);
   EXPECT_GE(f.size(), 0);
-  fmt::ULongLong file_size = f.size();
-  EXPECT_EQ(content.size(), file_size);
+  EXPECT_EQ(content.size(), static_cast<fmt::ULongLong>(f.size()));
 #ifdef _WIN32
   fmt::MemoryWriter message;
   fmt::internal::format_windows_error(
@@ -308,7 +307,7 @@ TEST(FileTest, ReadRetry) {
   write_end.write("test", SIZE);
   write_end.close();
   char buffer[SIZE];
-  std::streamsize count = 0;
+  std::size_t count = 0;
   EXPECT_RETRY(count = read_end.read(buffer, SIZE),
       read, "cannot read from file");
   EXPECT_EQ_POSIX(static_cast<std::streamsize>(SIZE), count);
@@ -318,7 +317,7 @@ TEST(FileTest, WriteRetry) {
   File read_end, write_end;
   File::pipe(read_end, write_end);
   enum { SIZE = 4 };
-  std::streamsize count = 0;
+  std::size_t count = 0;
   EXPECT_RETRY(count = write_end.write("test", SIZE),
       write, "cannot write to file");
   write_end.close();
@@ -454,12 +453,6 @@ TEST(BufferedFileTest, FilenoNoRetry) {
   fileno_count = 0;
 }
 
-template <typename Mock>
-struct ScopedMock : testing::StrictMock<Mock> {
-  ScopedMock() { Mock::instance = this; }
-  ~ScopedMock() { Mock::instance = 0; }
-};
-
 struct TestMock {
   static TestMock *instance;
 } *TestMock::instance;
@@ -488,6 +481,9 @@ struct LocaleMock {
 } *LocaleMock::instance;
 
 #ifdef _MSC_VER
+# pragma warning(push)
+# pragma warning(disable: 4273)
+
 _locale_t _create_locale(int category, const char *locale) {
   return LocaleMock::instance->newlocale(category, locale, 0);
 }
@@ -499,6 +495,7 @@ void _free_locale(_locale_t locale) {
 double _strtod_l(const char *nptr, char **endptr, _locale_t locale) {
   return LocaleMock::instance->strtod_l(nptr, endptr, locale);
 }
+# pragma warning(pop)
 #endif
 
 LocaleType newlocale(int category_mask, const char *locale, LocaleType base) {

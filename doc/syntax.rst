@@ -80,8 +80,8 @@ The general form of a *standard format specifier* is:
    sign: "+" | "-" | " "
    width: `integer` | "{" `arg_id` "}"
    precision: `integer` | "{" `arg_id` "}"
-   type: `int_type` | "c" | "e" | "E" | "f" | "F" | "g" | "G" | "p" | "s"
-   int_type: "b" | "B" | "d" | "o" | "x" | "X"
+   type: `int_type` | "a" | "A" | "c" | "e" | "E" | "f" | "F" | "g" | "G" | "p" | "s"
+   int_type: "b" | "B" | "d" | "n" | "o" | "x" | "X"
 
 The *fill* character can be any character other than '{' or '}'.  The presence
 of a fill character is signaled by the character following it, which must be
@@ -215,6 +215,10 @@ The available integer presentation types are:
 |         | upper-case letters for the digits above 9. Using the     |
 |         | ``'#'`` option with this type adds the prefix ``"0X"``   |
 |         | to the output value.                                     |
++---------+----------------------------------------------------------+
+| ``'n'`` | Number. This is the same as ``'d'``, except that it uses |
+|         | the current locale setting to insert the appropriate     |
+|         | number separator characters.                             |
 +---------+----------------------------------------------------------+
 | none    | The same as ``'d'``.                                     |
 +---------+----------------------------------------------------------+

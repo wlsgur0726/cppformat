@@ -46,7 +46,7 @@ source_suffix = '.rst'
 #master_doc = 'contents'
 
 # General information about the project.
-project = u'C++ Format'
+project = u'fmt'
 copyright = u'2012-2015, Victor Zverovich'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -76,7 +76,7 @@ copyright = u'2012-2015, Victor Zverovich'
 exclude_patterns = ['virtualenv']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
-#default_role = None
+default_role = 'cpp:any'
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 #add_function_parentheses = True
@@ -198,7 +198,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'format.tex', u'C++ Format Documentation',
+  ('index', 'format.tex', u'fmt documentation',
    u'Victor Zverovich', 'manual'),
 ]
 
@@ -228,8 +228,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'format', u'format Documentation',
-     [u'Victor Zverovich'], 1)
+    ('index', 'fmt', u'fmt documentation', [u'Victor Zverovich'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -242,8 +241,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'format', u'format Documentation',
-   u'Victor Zverovich', 'format', 'One line description of project.',
+  ('index', 'fmt', u'fmt documentation',
+   u'Victor Zverovich', 'fmt', 'One line description of project.',
    'Miscellaneous'),
 ]
 

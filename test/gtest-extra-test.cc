@@ -46,7 +46,7 @@ namespace {
 std::string sanitize(const std::string &s) {
   std::string result;
   for (std::string::const_iterator i = s.begin(), end = s.end(); i != end; ++i)
-    result.push_back(*i & 0xff);
+    result.push_back(static_cast<char>(*i & 0xff));
   return result;
 }
 
@@ -320,7 +320,7 @@ TEST(StreamingAssertionsTest, EXPECT_WRITE) {
 
 TEST(UtilTest, FormatSystemError) {
   fmt::MemoryWriter out;
-  fmt::internal::format_system_error(out, EDOM, "test message");
+  fmt::format_system_error(out, EDOM, "test message");
   EXPECT_EQ(out.str(), format_system_error(EDOM, "test message"));
 }
 

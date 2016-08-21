@@ -1,3 +1,9 @@
+# C++11 feature support detection
+
+if (NOT FMT_USE_CPP11)
+  return()
+endif ()
+
 include(CheckCXXCompilerFlag)
 
 if (FMT_USE_CPP11)
@@ -31,6 +37,11 @@ if (FMT_USE_CPP11)
   endif ()
 endif ()
 
+if (CMAKE_CXX_STANDARD)
+  # Don't use -std compiler flag if CMAKE_CXX_STANDARD is specified.
+  set(CPP11_FLAG )
+endif ()
+
 set(CMAKE_REQUIRED_FLAGS ${CPP11_FLAG})
 
 # Check if variadic templates are working and not affected by GCC bug 39653:
@@ -57,4 +68,11 @@ check_cxx_source_compiles("
   class C { void operator=(const C&); };
   int main() { static_assert(!std::is_copy_assignable<C>::value, \"\"); }"
   SUPPORTS_TYPE_TRAITS)
+
+# Check if user-defined literals are available
+check_cxx_source_compiles("
+  void operator\"\" _udl(long double);
+  int main() {}"
+  SUPPORTS_USER_DEFINED_LITERALS)
+
 set(CMAKE_REQUIRED_FLAGS )

@@ -36,6 +36,10 @@
 #ifndef GMOCK_INCLUDE_GMOCK_GMOCK_H_
 #define GMOCK_INCLUDE_GMOCK_GMOCK_H_
 
+#ifdef __clang__
+# pragma clang diagnostic ignored "-Wc99-extensions"
+#endif
+
 // This file implements the following syntax:
 //
 //   ON_CALL(mock_object.Method(...))
@@ -10086,8 +10090,9 @@ class FunctionMockerBase : public UntypedFunctionMockerBase {
   // threads concurrently.
   Result InvokeWith(const ArgumentTuple& args)
         GTEST_LOCK_EXCLUDED_(g_gmock_mutex) {
-    return static_cast<const ResultHolder*>(
-        this->UntypedInvokeWith(&args))->GetValueAndDelete();
+    const ResultHolder *rh = static_cast<const ResultHolder*>(
+                this->UntypedInvokeWith(&args));
+    return rh ? rh->GetValueAndDelete() : Result();
   }
 
   // Adds and returns a default action spec for this mock function.

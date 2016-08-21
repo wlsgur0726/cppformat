@@ -1,18 +1,18 @@
 Overview
 ========
 
-C++ Format (cppformat) is an open-source formatting library for C++.
+**fmt** (formerly cppformat) is an open-source formatting library.
 It can be used as a safe alternative to printf or as a fast
-alternative to IOStreams.
+alternative to C++ IOStreams.
 
 .. raw:: html
 
    <div class="panel panel-default">
      <div class="panel-heading">What users say:</div>
      <div class="panel-body">
-       Thanks for creating this library. It’s been a hole in C++ for a long time.
-       I’ve used both boost::format and loki::SPrintf, and neither felt like the
-       right answer. This does.
+       Thanks for creating this library. It’s been a hole in C++ for a long
+       time. I’ve used both boost::format and loki::SPrintf, and neither felt
+       like the right answer. This does.
      </div>
    </div>
 
@@ -24,8 +24,8 @@ Format API
 The replacement-based Format API provides a safe alternative to ``printf``,
 ``sprintf`` and friends with comparable or `better performance
 <http://zverovich.net/2013/09/07/integer-to-string-conversion-in-cplusplus.html>`_.
-The `format string syntax <doc/latest/index.html#format-string-syntax>`_ is similar
-to the one used by `str.format <http://docs.python.org/2/library/stdtypes.html#str.format>`_
+The `format string syntax <syntax.html>`_ is similar to the one used by
+`str.format <http://docs.python.org/2/library/stdtypes.html#str.format>`_
 in Python:
 
 .. code:: c++
@@ -98,8 +98,8 @@ literal operators, they must be made visible with the directive
 Write API
 ---------
 
-The concatenation-based Write API (experimental) provides a
-`fast <http://zverovich.net/2013/09/07/integer-to-string-conversion-in-cplusplus.html>`_
+The concatenation-based Write API (experimental) provides a `fast
+<http://zverovich.net/2013/09/07/integer-to-string-conversion-in-cplusplus.html>`_
 stateless alternative to IOStreams:
 
 .. code:: c++
@@ -112,8 +112,9 @@ stateless alternative to IOStreams:
 Safety
 ------
 
-The library is fully type safe, automatic memory management prevents buffer overflow,
-errors in format strings are reported using exceptions. For example, the code
+The library is fully type safe, automatic memory management prevents buffer
+overflow, errors in format strings are reported using exceptions. For example,
+the code
 
 .. code:: c++
 
@@ -138,44 +139,46 @@ formatted into a narrow string. You can use a wide format string instead:
   fmt::format(L"Cyrillic letter {}", L'\x42e');
 
 For comparison, writing a wide character to ``std::ostream`` results in
-its numeric value being written to the stream (i.e. 1070 instead of letter 'ю' which
-is represented by ``L'\x42e'`` if we use Unicode) which is rarely what is needed.
+its numeric value being written to the stream (i.e. 1070 instead of letter 'ю'
+which is represented by ``L'\x42e'`` if we use Unicode) which is rarely what is
+needed.
 
 .. _portability:
 
 Portability
 -----------
 
-C++ Format is highly portable. Here is an incomplete list of operating systems and
-compilers where it has been tested and known to work:
+The library is highly portable. Here is an incomplete list of operating systems
+and compilers where it has been tested and known to work:
 
-* 64-bit (amd64) GNU/Linux with GCC 4.4.3, `4.6.3 <https://travis-ci.org/cppformat/cppformat>`_,
-  4.7.2, 4.8.1 and Intel C++ Compiler (ICC) 14.0.2
+* 64-bit (amd64) GNU/Linux with GCC 4.4.3,
+  `4.6.3 <https://travis-ci.org/fmtlib/fmt>`_, 4.7.2, 4.8.1, and Intel C++
+  Compiler (ICC) 14.0.2
 
 * 32-bit (i386) GNU/Linux with GCC 4.4.3, 4.6.3
 
 * Mac OS X with GCC 4.2.1 and Clang 4.2, 5.1.0
 
 * 64-bit Windows with Visual C++ 2010, 2013 and
-  `2015 <https://ci.appveyor.com/project/vitaut/cppformat>`_
+  `2015 <https://ci.appveyor.com/project/vitaut/fmt>`_
 
 * 32-bit Windows with Visual C++ 2010
 
-Although the library uses C++11 features when available, it also works with older
-compilers and standard library implementations. The only thing to keep in mind 
-for C++98 portability:
+Although the library uses C++11 features when available, it also works with
+older compilers and standard library implementations. The only thing to keep in
+mind for C++98 portability:
 
 * Variadic templates: minimum GCC 4.4, Clang 2.9 or VS2013. This feature allows 
-  the Format API to accept an unlimited number of arguments. With older compilers
-  the maximum is 15.
+  the Format API to accept an unlimited number of arguments. With older
+  compilers the maximum is 15.
 
-* User-defined literals: minimum GCC 4.7, Clang 3.1 or VS2015. The suffixes 
-  ``_format`` and ``_a`` are functionally equivalent to the functions 
+* User-defined literals: minimum GCC 4.7, Clang 3.1 or VS2015. The suffixes
+  ``_format`` and ``_a`` are functionally equivalent to the functions
   ``fmt::format`` and ``fmt::arg``.
 
-The output of all formatting functions is consistent across platforms. In particular,
-formatting a floating-point infinity always gives ``inf`` while the output
-of ``printf`` is platform-dependent in this case. For example,
+The output of all formatting functions is consistent across platforms. In
+particular, formatting a floating-point infinity always gives ``inf`` while the
+output of ``printf`` is platform-dependent in this case. For example,
 
 .. code::
 
@@ -188,16 +191,16 @@ always prints ``inf``.
 Ease of Use
 -----------
 
-C++ Format has small self-contained code base consisting of a single header file
-and a single source file and no external dependencies. A permissive BSD `license
-<https://github.com/cppformat/cppformat#license>`_ allows using the library both
-in open-source and commercial projects.
+fmt has a small self-contained code base with the core library consisting of
+a single header file and a single source file and no external dependencies.
+A permissive BSD `license <https://github.com/fmtlib/fmt#license>`_ allows
+using the library both in open-source and commercial projects.
 
 .. raw:: html
 
-  <a class="btn btn-success" href="https://github.com/cppformat/cppformat">GitHub Repository</a>
+  <a class="btn btn-success" href="https://github.com/fmtlib/fmt">GitHub Repository</a>
 
   <div class="section footer">
-    <iframe src="http://ghbtns.com/github-btn.html?user=cppformat&amp;repo=cppformat&amp;type=watch&amp;count=true"
+    <iframe src="http://ghbtns.com/github-btn.html?user=fmtlib&amp;repo=fmt&amp;type=watch&amp;count=true"
             class="github-btn" width="100" height="20"></iframe>
   </div>

@@ -29,13 +29,16 @@
 #include "test-assert.h"
 
 // Include format.cc instead of format.h to test implementation-specific stuff.
-#include "cppformat/format.cc"
+#include "fmt/format.cc"
 
+#include <algorithm>
 #include <cstring>
 
+#include "gmock/gmock.h"
 #include "gtest-extra.h"
 #include "util.h"
 
+#undef min
 #undef max
 
 TEST(FormatTest, ArgConverter) {
@@ -43,7 +46,7 @@ TEST(FormatTest, ArgConverter) {
   Arg arg = Arg();
   arg.type = Arg::LONG_LONG;
   arg.long_long_value = std::numeric_limits<fmt::LongLong>::max();
-  fmt::ArgConverter<fmt::LongLong>(arg, 'd').visit(arg);
+  fmt::internal::ArgConverter<fmt::LongLong>(arg, 'd').visit(arg);
   EXPECT_EQ(Arg::LONG_LONG, arg.type);
 }
 
@@ -59,7 +62,8 @@ TEST(FormatTest, StrError) {
   char *message = 0;
   char buffer[BUFFER_SIZE];
   EXPECT_ASSERT(fmt::safe_strerror(EDOM, message = 0, 0), "invalid buffer");
-  EXPECT_ASSERT(fmt::safe_strerror(EDOM, message = buffer, 0), "invalid buffer");
+  EXPECT_ASSERT(fmt::safe_strerror(EDOM, message = buffer, 0),
+                "invalid buffer");
   buffer[0] = 'x';
 #if defined(_GNU_SOURCE) && !defined(__COVERITY__)
   // Use invalid error code to make sure that safe_strerror returns an error
@@ -101,13 +105,21 @@ TEST(FormatTest, FormatErrorCode) {
     fmt::format_error_code(w, 42, prefix);
     EXPECT_EQ(msg, w.str());
   }
-  {
+  int codes[] = {42, -1};
+  for (std::size_t i = 0, n = sizeof(codes) / sizeof(*codes); i < n; ++i) {
+    // Test maximum buffer size.
+    msg = fmt::format("error {}", codes[i]);
     fmt::MemoryWriter w;
     std::string prefix(
         fmt::internal::INLINE_BUFFER_SIZE - msg.size() - sep.size(), 'x');
-    fmt::format_error_code(w, 42, prefix);
+    fmt::format_error_code(w, codes[i], prefix);
     EXPECT_EQ(prefix + sep + msg, w.str());
     std::size_t size = fmt::internal::INLINE_BUFFER_SIZE;
     EXPECT_EQ(size, w.size());
+    w.clear();
+    // Test with a message that doesn't fit into the buffer.
+    prefix += 'x';
+    fmt::format_error_code(w, codes[i], prefix);
+    EXPECT_EQ(msg, w.str());
   }
 }

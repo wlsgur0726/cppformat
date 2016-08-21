@@ -29,7 +29,8 @@
 #include <climits>
 #include <cstring>
 
-#include "cppformat/format.h"
+#include "fmt/printf.h"
+#include "fmt/format.h"
 #include "gtest-extra.h"
 #include "util.h"
 
@@ -292,21 +293,22 @@ SPECIALIZE_MAKE_SIGNED(fmt::ULongLong, fmt::LongLong);
 // Test length format specifier ``length_spec``.
 template <typename T, typename U>
 void TestLength(const char *length_spec, U value) {
-  fmt::LongLong signed_value = value;
-  fmt::ULongLong unsigned_value = value;
+  fmt::LongLong signed_value = 0;
+  fmt::ULongLong unsigned_value = 0;
   // Apply integer promotion to the argument.
-  fmt::ULongLong max = std::numeric_limits<U>::max();
-  using fmt::internal::check;
-  if (check(max <= static_cast<unsigned>(std::numeric_limits<int>::max()))) {
+  using std::numeric_limits;
+  fmt::ULongLong max = numeric_limits<U>::max();
+  using fmt::internal::const_check;
+  if (const_check(max <= static_cast<unsigned>(numeric_limits<int>::max()))) {
     signed_value = static_cast<int>(value);
-    unsigned_value = static_cast<int>(value);
-  } else if (check(max <= std::numeric_limits<unsigned>::max())) {
+    unsigned_value = static_cast<unsigned>(value);
+  } else if (const_check(max <= numeric_limits<unsigned>::max())) {
     signed_value = static_cast<unsigned>(value);
     unsigned_value = static_cast<unsigned>(value);
   }
   using fmt::internal::MakeUnsigned;
   if (sizeof(U) <= sizeof(int) && sizeof(int) < sizeof(T)) {
-    signed_value = value;
+    signed_value = static_cast<fmt::LongLong>(value);
     unsigned_value = static_cast<typename MakeUnsigned<unsigned>::Type>(value);
   } else {
     signed_value = static_cast<typename MakeSigned<T>::Type>(value);
@@ -337,12 +339,9 @@ void TestLength(const char *length_spec) {
   TestLength<T>(length_spec, -42);
   TestLength<T>(length_spec, min);
   TestLength<T>(length_spec, max);
-  using fmt::internal::check;
-  fmt::LongLong long_long_min = std::numeric_limits<fmt::LongLong>::min();
-  if (check(min >= 0) || check(static_cast<fmt::LongLong>(min) > long_long_min))
-    TestLength<T>(length_spec, fmt::LongLong(min) - 1);
+  TestLength<T>(length_spec, fmt::LongLong(min) - 1);
   fmt::ULongLong long_long_max = std::numeric_limits<fmt::LongLong>::max();
-  if (check(max < 0 || static_cast<fmt::ULongLong>(max) < long_long_max))
+  if (static_cast<fmt::ULongLong>(max) < long_long_max)
     TestLength<T>(length_spec, fmt::LongLong(max) + 1);
   TestLength<T>(length_spec, std::numeric_limits<short>::min());
   TestLength<T>(length_spec, std::numeric_limits<unsigned short>::max());
@@ -382,7 +381,7 @@ TEST(PrintfTest, Bool) {
 TEST(PrintfTest, Int) {
   EXPECT_PRINTF("-42", "%d", -42);
   EXPECT_PRINTF("-42", "%i", -42);
-  unsigned u = -42;
+  unsigned u = 0 - 42u;
   EXPECT_PRINTF(fmt::format("{}", u), "%u", -42);
   EXPECT_PRINTF(fmt::format("{:o}", u), "%o", -42);
   EXPECT_PRINTF(fmt::format("{:x}", u), "%x", -42);
@@ -450,10 +449,6 @@ TEST(PrintfTest, Pointer) {
   EXPECT_PRINTF("(nil)", "%p", null_str);
 }
 
-TEST(PrintfTest, Custom) {
-  EXPECT_PRINTF("abc", "%s", TestString("abc"));
-}
-
 TEST(PrintfTest, Location) {
   // TODO: test %n
 }
@@ -482,10 +477,14 @@ TEST(PrintfTest, PrintfError) {
 #endif
 
 TEST(PrintfTest, WideString) {
-  EXPECT_EQ(L"abc", fmt::sprintf(L"%s", TestWString(L"abc")));
+  EXPECT_EQ(L"abc", fmt::sprintf(L"%s", L"abc"));
 }
 
-TEST(PrintfTest, Iostream) {
+TEST(PrintfTest, PrintfCustom) {
+  EXPECT_EQ("abc", fmt::sprintf("%s", TestString("abc")));
+}
+
+TEST(PrintfTest, OStream) {
   std::ostringstream os;
   int ret = fmt::fprintf(os, "Don't %s!", "panic");
   EXPECT_EQ("Don't panic!", os.str());
