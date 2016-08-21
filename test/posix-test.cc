@@ -388,11 +388,11 @@ TEST(FileTest, FdopenError) {
       f.fdopen("r"), EBADF, "cannot associate stream with file descriptor");
 }
 
-//#ifdef FMT_LOCALE
-//TEST(LocaleTest, Strtod) {
-//  fmt::Locale locale;
-//  const char *start = "4.2", *ptr = start;
-//  EXPECT_EQ(4.2, locale.strtod(ptr));
-//  EXPECT_EQ(start + 3, ptr);
-//}
-//#endif
+#ifdef FMT_LOCALE
+TEST(LocaleTest, Strtod) {
+  fmt::Locale locale;
+  const char *start = "4.2", *ptr = start;
+  EXPECT_EQ(4.2, locale.strtod(ptr));
+  EXPECT_EQ(start + 3, ptr);
+}
+#endif

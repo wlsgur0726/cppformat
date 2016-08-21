@@ -75,7 +75,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)test</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>FMT_USE_FILE_DESCRIPTORS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>FMT_USE_FILE_DESCRIPTORS;_UNICODE;UNICODE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -87,7 +87,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)test</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>FMT_USE_FILE_DESCRIPTORS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>FMT_USE_FILE_DESCRIPTORS;_UNICODE;UNICODE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -101,7 +101,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)test</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>FMT_USE_FILE_DESCRIPTORS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>FMT_USE_FILE_DESCRIPTORS;_UNICODE;UNICODE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -117,7 +117,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)test</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>FMT_USE_FILE_DESCRIPTORS;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>FMT_USE_FILE_DESCRIPTORS;_UNICODE;UNICODE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -126,21 +126,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="test\assert-test.cc" />
-    <ClCompile Include="test\format-impl-test.cc" />
-    <ClCompile Include="test\format-test.cc" />
-    <ClCompile Include="test\gmock-gtest-all.cc" />
-    <ClCompile Include="test\gtest-extra-test.cc" />
-    <ClCompile Include="test\gtest-extra.cc" />
-    <ClCompile Include="test\header-only-test.cc" />
-    <ClCompile Include="test\header-only-test2.cc" />
-    <ClCompile Include="test\macro-test.cc" />
-    <ClCompile Include="test\posix-mock-test.cc" />
-    <ClCompile Include="test\posix-test.cc" />
-    <ClCompile Include="test\printf-test.cc" />
-    <ClCompile Include="test\test-main.cc" />
-    <ClCompile Include="test\util-test.cc" />
-    <ClCompile Include="test\util.cc" />
+    <ProjectReference Include="cppformat.vcxproj">
+      <Project>{175b1a44-660c-4ce6-98fc-9176e2a90e7d}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="test\gmock\gmock.h" />
@@ -153,9 +141,27 @@
     <ClInclude Include="test\util.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="cppformat.vcxproj">
-      <Project>{175b1a44-660c-4ce6-98fc-9176e2a90e7d}</Project>
-    </ProjectReference>
+    <ClCompile Include="test\assert-test.cc" />
+    <ClCompile Include="test\custom-formatter-test.cc" />
+    <ClCompile Include="test\format-impl-test.cc" />
+    <ClCompile Include="test\format-test.cc" />
+    <ClCompile Include="test\gmock-gtest-all.cc" />
+    <ClCompile Include="test\gtest-extra-test.cc" />
+    <ClCompile Include="test\gtest-extra.cc" />
+    <ClCompile Include="test\header-only-test.cc" />
+    <ClCompile Include="test\header-only-test2.cc" />
+    <ClCompile Include="test\macro-test.cc" />
+    <ClCompile Include="test\ostream-test.cc" />
+    <ClCompile Include="test\posix-test.cc" />
+    <ClCompile Include="test\printf-test.cc" />
+    <ClCompile Include="test\string-test.cc" />
+    <ClCompile Include="test\test-main.cc" />
+    <ClCompile Include="test\time-test.cc" />
+    <ClCompile Include="test\util-test.cc" />
+    <ClCompile Include="test\util.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="test\CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
