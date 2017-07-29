@@ -1234,6 +1234,16 @@ TEST(FormatterTest, FormatIntLocale) {
   EXPECT_EQ("1--234--567", format("{:n}", 1234567));
 }
 
+struct ConvertibleToLongLong {
+  operator fmt::LongLong() const {
+    return fmt::LongLong(1) << 32;
+  }
+};
+
+TEST(FormatterTest, FormatConvertibleToLongLong) {
+  EXPECT_EQ("100000000", format("{:x}", ConvertibleToLongLong()));
+}
+
 TEST(FormatterTest, FormatFloat) {
   EXPECT_EQ("392.500000", format("{0:f}", 392.5f));
 }
@@ -1556,8 +1566,8 @@ TEST(FormatTest, JoinArg) {
   using fmt::join;
   int v1[3] = { 1, 2, 3 };
   std::vector<float> v2;
-  v2.push_back(1.2);
-  v2.push_back(3.4);
+  v2.push_back(1.2f);
+  v2.push_back(3.4f);
 
   EXPECT_EQ("(1, 2, 3)", format("({})", join(v1 + 0, v1 + 3, ", ")));
   EXPECT_EQ("(1)", format("({})", join(v1 + 0, v1 + 1, ", ")));
